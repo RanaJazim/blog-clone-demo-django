@@ -1,0 +1,38 @@
+{% extends "authapp/base.html" %}
+
+{% block title %}
+  All Comments of Particular Post
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <h3>All the Comments of Post ( {{ post.title }} )</h3>
+
+    <div class="">
+      <table class="table table-bordered">
+        <tr>
+          <th>Author</th>
+          <th>Comment Description</th>
+          <th>Approved it</th>
+        </tr>
+
+        {% for comment in post.comments.all  %}
+        <tr>
+          <td>{{ comment.author }}</td>
+          <td>{{ comment.text }}</td>
+
+          {% if not comment.approved_comment %}
+            <td><a href="{% url 'blogapp:comment_approved' comment.id %}" class="btn btn-primary">Make Approved</a></td>
+          {% else %}
+            <td>Already Approved</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+
+      </table>
+    </div>
+
+  </div>
+
+{% endblock %}

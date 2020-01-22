@@ -1,0 +1,66 @@
+{% extends "authapp/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    All Posts
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h3>All Blog Posts</h3>
+
+        {% if is_show %}
+        <div class="" style="margin-top:30px">
+            <a href="{% url 'blogapp:post_create' %}"
+                class="btn btn-primary">
+                Add More Posts
+            </a>
+        </div>
+        {% endif %}
+
+        <div style="margin-top:30px" class="blog-section">
+            {% for post in posts %}
+                <div class="">
+                    <h4>{{ post.title }}</h4>
+                    <p>{{ post.text }}</p>
+
+                    <a href="{% url 'blogapp:comment_index' post.id %}">
+                      All Comments
+                    </a><br>
+
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'blogapp:post_edit' post.id %}"
+                        class="btn btn-primary btn-xs">
+                      Edit
+                    </a>
+
+                    <form action="{% url 'blogapp:post_destroy' post.id %}"
+                          method="post" style="margin-top:10px">
+                      {% csrf_token %}
+
+                      <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                    {% endif %}
+
+                    {# adding the Comment Form #}
+                    <div class="row">
+                      <div class="col-md-4">
+                        <form action="{% url 'blogapp:comment_store' post.id %}"
+                              method="post">
+                              {% csrf_token %}
+                              {{ commentForm|crispy }}
+
+                              <input type="submit" value="Submit" class="btn btn-success">
+                        </form>
+                      </div>
+                    </div>
+                    {# /adding the Comment Form #}
+
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
